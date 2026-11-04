@@ -5,11 +5,57 @@ It's for musicians who can't find sheet music for a song, or can't afford it. Ba
 
 > Automatic first draft. Not a verified transcription.
 
-[![Try TRACE in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/SSaiyan13/trace?quickstart=1)
-
-**Try it in your browser:** click the button above (you need a free GitHub account). The page opens in a preview tab after about a minute. Nothing is deployed: it runs in your own temporary Codespace, which only you can see. See [Run it](#run-it) for other ways.
-
 ![TRACE on a laptop: the song's tab and sheet music, with the marker on bar 3 and the player at the bottom](docs/screenshots/0-laptop.png)
+
+## Try TRACE yourself
+
+TRACE isn't published as a website yet (it's an unfinished prototype), but anyone can open it in two ways. Both are free.
+
+### Option 1: in your browser, nothing to install
+
+[![Open TRACE in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/SSaiyan13/trace?quickstart=1)
+
+1. Sign in to GitHub (a free account is enough).
+2. Click **Open in GitHub Codespaces** above, then **Create codespace**.
+3. Wait about a minute while it starts. TRACE opens by itself in a preview tab.
+   If it doesn't, click the **Ports** tab at the bottom and then the globe icon next to port **8000**.
+4. When you're done, close the tab. Codespaces stops itself when idle; you can delete it at https://github.com/codespaces.
+
+It runs in your own temporary copy, which only you can see. GitHub gives personal accounts a free monthly allowance of Codespaces time.
+
+### Option 2: on your own computer
+
+You need **Python 3** (free from https://www.python.org/downloads/; on Windows, tick "Add Python to PATH" when installing).
+
+1. Download TRACE: [**Download ZIP**](https://github.com/SSaiyan13/trace/archive/refs/heads/main.zip), then unzip it.
+2. Open a terminal in the unzipped `trace-main` folder.
+   - Windows: open the folder, click the address bar, type `cmd` and press Enter.
+   - Mac: right-click the folder and choose **New Terminal at Folder**.
+3. Start TRACE:
+
+   ```bash
+   python -m http.server 8000 --directory web
+   ```
+
+   (On a Mac, type `python3` instead of `python` if the first one isn't found.)
+4. Open **http://localhost:8000** in your browser.
+5. To stop it, go back to the terminal and press **Ctrl + C**.
+
+Double-clicking `index.html` won't work, because the page needs to load the music files through a small local web server; that's what step 3 starts.
+
+### What to try once it's open
+
+1. On the front page, pick **Demo Groove** (an original song made for this prototype).
+2. Watch the short "getting it ready" screen: it explains how TRACE works, step by step. Or press **Show me the music now**.
+3. Press **Play**. You hear the "real" bass while a marker moves through the music.
+4. Switch between **Tab**, **Sheet music** and **Both**.
+5. Tap any bar to jump there. Press **Repeat**, then **2**, to loop two bars.
+6. Drag **Speed** down to 70% to practise slowly.
+7. Open **Hear the tab alone** to hear what TRACE wrote, played by a computer.
+8. Press **Print or save as PDF** to see the printable version.
+9. Search for a song that isn't there and press **Request this song**.
+
+Use a laptop or iPad with sound on, ideally with headphones. Only the demo song is included in the public version, for copyright reasons (see [Rights and licensing](#rights-and-licensing)).
 
 This is a product-management case-study prototype. The code is kept plain and readable on purpose, so every decision can be explained. The design choices are written up in [docs/decisions.md](docs/decisions.md).
 
@@ -61,21 +107,9 @@ The tracker is driven by the real bass's playback clock: `beat = (currentTime âˆ
 
 ---
 
-## Run it
+## Run it (for developers)
 
-**In your browser (GitHub Codespaces):** press the **Open in GitHub Codespaces** button at the top. The setup in [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json) starts the web server and opens TRACE in a preview tab. If the preview doesn't open by itself, open the **Ports** tab and click the globe next to port 8000. Codespaces is free for personal accounts up to a monthly limit, and stops itself when idle. Delete the codespace afterwards at https://github.com/codespaces.
-
-**On your own computer:** you need Python 3 (3.11 recommended) on Windows, macOS or Linux. There is no build step and nothing to install for the page.
-
-```bash
-cd web
-```
-
-```bash
-python -m http.server 8000
-```
-
-Open http://localhost:8000. Opening `index.html` by double-clicking won't work, because the page loads files.
+The steps are in [Try TRACE yourself](#try-trace-yourself). There is no build step: the page is plain HTML, CSS and JavaScript in `web/`, served by any static file server. The Codespaces setup is in [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json).
 
 The public repo comes with one song, **Demo Groove**. It's an original bass line written for this project, so it is safe to publish (see [Demo song](#demo-song)).
 
