@@ -5,6 +5,10 @@ It's for musicians who can't find sheet music for a song, or can't afford it. Ba
 
 > Automatic first draft. Not a verified transcription.
 
+[![Try TRACE in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/SSaiyan13/trace?quickstart=1)
+
+**Try it in your browser:** click the button above (you need a free GitHub account). The page opens in a preview tab after about a minute. Nothing is deployed: it runs in your own temporary Codespace, which only you can see. See [Run it](#run-it) for other ways.
+
 ![The result screen: tab and sheet music with the playback tracker on bar 3](docs/screenshots/3b-notation-tracker.png)
 
 This is a product-management case-study prototype. The code is kept plain and readable on purpose, so every decision can be explained. The design choices are written up in [docs/decisions.md](docs/decisions.md).
@@ -59,7 +63,9 @@ The tracker is driven by the real bass's playback clock: `beat = (currentTime âˆ
 
 ## Run it
 
-You need Python 3 (3.11 recommended) on Windows, macOS or Linux. There is no build step and nothing to install for the page.
+**In your browser (GitHub Codespaces):** press the **Open in GitHub Codespaces** button at the top. The setup in [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json) starts the web server and opens TRACE in a preview tab. If the preview doesn't open by itself, open the **Ports** tab and click the globe next to port 8000. Codespaces is free for personal accounts up to a monthly limit, and stops itself when idle. Delete the codespace afterwards at https://github.com/codespaces.
+
+**On your own computer:** you need Python 3 (3.11 recommended) on Windows, macOS or Linux. There is no build step and nothing to install for the page.
 
 ```bash
 cd web

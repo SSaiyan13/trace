@@ -1,0 +1,18 @@
+{
+  // Lets anyone try TRACE in their browser with GitHub Codespaces, without deploying it.
+  // Opening a codespace starts a small web server and opens the page in a preview tab.
+  // Only the person who opened the codespace can see it (the port stays private).
+  "name": "TRACE",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": { "label": "TRACE", "onAutoForward": "openPreview" }
+  },
+  // The page needs nothing installed: it's plain HTML served from web/.
+  "postAttachCommand": {
+    "trace": "python -m http.server 8000 --directory web"
+  },
+  "customizations": {
+    "codespaces": { "openFiles": ["README.md"] }
+  }
+}
