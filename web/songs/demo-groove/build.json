@@ -1,0 +1,68 @@
+{
+  "steps": [
+    {
+      "name": "Getting the song",
+      "seconds": 0.0,
+      "note": null
+    },
+    {
+      "name": "Separating the bass",
+      "seconds": null,
+      "note": "you gave a MIDI file and a stem"
+    },
+    {
+      "name": "Finding the notes",
+      "seconds": null,
+      "note": "you gave a MIDI file"
+    },
+    {
+      "name": "Writing the tab",
+      "seconds": 0.27,
+      "note": null
+    }
+  ],
+  "tempo": {
+    "source": "given",
+    "bpm": 96.0
+  },
+  "offset": {
+    "source": "given",
+    "seconds": 1.0
+  },
+  "key": {
+    "used": "fminor",
+    "detected": {
+      "alphatex": "fminor",
+      "name": "F minor",
+      "signature": "4 flats",
+      "accidentals": -4,
+      "tonic": 5,
+      "mode": "minor",
+      "confidence": "high",
+      "margin": 0.294,
+      "alternatives": [
+        "F major",
+        "Ab major",
+        "C minor"
+      ]
+    }
+  },
+  "notes": {
+    "detected": 168,
+    "after_cleanup": 124,
+    "written": 123
+  },
+  "range": [
+    "F1",
+    "Ab2"
+  ],
+  "settings": {
+    "min_velocity": 20,
+    "min_note_ms": 50.0,
+    "merge_gap_ms": 30.0,
+    "merge_short_fraction": 0.5,
+    "gap_fill": 2,
+    "merge_repeats": true
+  },
+  "built_at": "2026-11-03 23:25"
+}

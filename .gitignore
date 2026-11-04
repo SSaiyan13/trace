@@ -1,0 +1,48 @@
+# ---------------------------------------------------------------
+# Copyright guardrail: never commit audio, stems, MIDI or
+# transcriptions of real songs. Everything below is ignored by
+# default; the only exceptions are the original synthetic demo.
+# ---------------------------------------------------------------
+
+# Audio and MIDI anywhere in the repo
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+*.aac
+*.opus
+*.mid
+*.midi
+
+# Your local, private material (real songs, your old prototype)
+private-demo/
+reference/
+work/
+
+# Built songs are private by default. Only the original demo is public.
+web/songs/*
+!web/songs/manifest.json
+!web/songs/demo-groove/
+!web/songs/demo-groove/*.wav
+web/songs/manifest.local.json
+
+# The demo's source MIDI is original material made by pipeline/make_demo.py
+!demo/
+!demo/*.mid
+
+# Python and Node
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.pytest_cache/
+node_modules/
+
+# OS and editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

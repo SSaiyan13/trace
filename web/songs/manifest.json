@@ -1,0 +1,16 @@
+{
+  "songs": [
+    {
+      "id": "demo-groove",
+      "title": "Demo Groove",
+      "artist": "Original demo (synthetic)",
+      "bpm": 96.0,
+      "offset": 1.0,
+      "key": "fminor",
+      "bars": 28,
+      "atex": "songs/demo-groove/song.atex",
+      "stem": "songs/demo-groove/stem.wav",
+      "build": "songs/demo-groove/build.json"
+    }
+  ]
+}

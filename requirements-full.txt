@@ -1,0 +1,6 @@
+# The full pipeline: separating the bass (Demucs) and finding the notes (Basic Pitch).
+# Basic Pitch supports Python 3.7 to 3.11, so use a Python 3.11 virtual environment.
+# Both download model weights on first use. Demucs is much faster with an NVIDIA GPU.
+-r requirements.txt
+basic-pitch
+demucs
