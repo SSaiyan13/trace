@@ -9,7 +9,7 @@ It's for musicians who can't find sheet music for a song, or can't afford it. Ba
 
 **Try it in your browser:** click the button above (you need a free GitHub account). The page opens in a preview tab after about a minute. Nothing is deployed: it runs in your own temporary Codespace, which only you can see. See [Run it](#run-it) for other ways.
 
-![The result screen: tab and sheet music with the playback tracker on bar 3](docs/screenshots/3b-notation-tracker.png)
+![TRACE on a laptop: the song's tab and sheet music, with the marker on bar 3 and the player at the bottom](docs/screenshots/0-laptop.png)
 
 This is a product-management case-study prototype. The code is kept plain and readable on purpose, so every decision can be explained. The design choices are written up in [docs/decisions.md](docs/decisions.md).
 
