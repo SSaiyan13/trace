@@ -33,10 +33,12 @@ song audio ──► separate the bass ──► find the notes ──► write 
 The journey follows a "ticket marketplace" pattern: you say what you want, quickly get a result page, and act on it. It's only a UX pattern; nothing is integrated with any marketplace or streaming service. More detail is in [docs/journey.md](docs/journey.md).
 
 1. **Find**: search, or pick from the songs that are ready. If a song isn't there, you see "We don't have that yet" and a **Request this song** button. That button is a *fake door*: it counts demand before anything is built. Requests stay in your browser (localStorage), and you can export them as JSON.
-2. **Wait**: four steps: get the song, separate the bass, find the notes, write the tab. In this prototype they ran ahead of time, and the screen says so. It shows how long each step **really** took when the song was built (from `build.json`). Steps that weren't timed say "done earlier (not timed)".
+2. **Wait**: while the song is prepared, the screen explains each of the four steps in plain words (get the song, separate the instrument, find the notes, write the music). In this prototype they ran ahead of time, and the screen says so. It shows how long each step **really** took when the song was built (from `build.json`). Steps that weren't timed say "done earlier (not timed)".
 3. **See it**: the whole song as tab, sheet music, or both. The key is detected, shown, and can be changed.
-4. **Hear it**: **Play** plays the real bass while a marker follows the tab. You can also play the tab alone, or both together.
+4. **Hear it**: **Play** plays the real bass while a marker follows the tab. You can also play the tab alone, or both together. **Repeat** loops 1, 2, 4 or 8 bars from where you are; tap any bar to move the repeat there. If the marker runs ahead of or behind the sound (wireless headphones), nudge it under "Marker ahead of or behind the sound?".
 5. **Take it away**: print, or save as PDF. Only the music is printed.
+
+The page itself doesn't show these stages as a progress strip; they're the design model behind it. Only bass works today. The front page shows guitar, piano and drums as "coming later": tapping one records the interest, like **Request this song**.
 
 | Find | Wait | Result (iPad) | Result (phone) |
 |---|---|---|---|

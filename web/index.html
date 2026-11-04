@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>TRACE &middot; bass tab you can check by ear</title>
+<title>TRACE &middot; Transcribe, Read, And Check by Ear</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,75 +13,94 @@
 
 <header class="site-header no-print">
   <div class="wrap">
-    <p class="brand"><span aria-hidden="true">&#119074;</span> TRACE <small class="tagline">Transcribe, Read, And Check by Ear</small></p>
-    <nav aria-label="Your progress">
-      <ol class="steps" id="steps">
-        <li data-step="find">Find</li>
-        <li data-step="wait">Wait</li>
-        <li data-step="see">See it</li>
-        <li data-step="hear">Hear it</li>
-        <li data-step="take">Take it away</li>
-      </ol>
-    </nav>
+    <a class="brand" href="./" aria-label="TRACE home">
+      <svg class="logo" viewBox="-20 -1110 830 1850" aria-hidden="true" focusable="false"><g transform="scale(1,-1)"><path class="clef-treble" d="M364 -252C387 -252 413 -250 433 -246C444 -244 446 -243 448 -255C460 -322 475 -409 475 -456C475 -604 375 -622 316 -622C262 -622 236 -606 236 -593C236 -586 245 -583 268 -576C299 -567 335 -540 335 -482C335 -427 300 -380 239 -380C172 -380 132 -433 132 -495C132 -560 171 -658 322 -658C389 -658 519 -628 519 -458C519 -401 501 -306 490 -244C488 -232 489 -233 503 -227C604 -187 671 -102 671 11C671 139 577 252 430 252C404 252 404 252 401 270L376 415C374 427 376 428 382 434C490 535 572 662 572 815C572 902 548 988 507 1048C492 1070 466 1098 455 1098C441 1098 410 1072 390 1050C316 968 292 843 292 739C292 681 299 616 306 575C308 563 309 561 297 551C153 432 0 289 0 87C0 -87 119 -252 364 -252ZM80 20C80 79 90 158 173 252C233 319 279 356 326 394C336 402 338 401 340 390L361 262C364 243 364 244 346 238C258 208 201 129 201 44C201 -46 248 -110 316 -133C324 -136 336 -139 343 -139C351 -139 355 -134 355 -128C355 -121 347 -118 340 -115C298 -97 268 -54 268 -8C268 49 307 92 368 109C384 113 386 112 388 101L438 -197C440 -208 439 -208 424 -211C408 -214 388 -216 368 -216C193 -216 80 -119 80 20ZM470 943C503 943 530 916 530 861C530 750 435 660 356 591C349 585 345 586 343 599C339 625 337 659 337 691C337 847 409 943 470 943ZM441 117C522 110 589 42 589 -46C589 -109 551 -160 495 -188C483 -194 481 -194 479 -182L430 103C428 115 429 118 441 117Z"/><g transform="translate(140,-120) scale(0.95)"><path class="clef-bass" d="M8 -635C13 -635 19 -633 25 -630C271 -510 531 -332 531 -28C531 146 425 262 252 262C78 262 0 135 0 39C0 -41 42 -110 123 -110C186 -110 229 -66 229 -4C229 60 182 100 133 100C106 100 96 93 83 93C70 93 67 101 67 111C67 151 127 224 229 224C335 224 381 120 381 -37C381 -316 243 -472 10 -605C1 -610 -5 -615 -5 -623C-5 -629 -1 -635 8 -635ZM629 70C660 70 684 94 684 125C684 156 660 180 629 180C598 180 574 156 574 125C574 94 598 70 629 70ZM630 -179C661 -179 684 -156 684 -125C684 -94 661 -71 630 -71C599 -71 576 -94 576 -125C576 -156 599 -179 630 -179Z"/></g></g></svg>
+      <span class="brand-text">TRACE <small class="tagline">Transcribe, Read, And Check by Ear</small></span>
+    </a>
   </div>
 </header>
 
 <main id="main" class="wrap" tabindex="-1">
 
-  <!-- ============ Screen 1: Find ============ -->
+  <!-- ============ Find ============ -->
   <section id="screen-find" class="screen no-print" aria-labelledby="find-h">
-    <h1 id="find-h">Which song do you want to play?</h1>
-    <p class="lead">Pick a song and get the bass part as tab and sheet music. You can listen along and print it.</p>
+    <div class="hero">
+      <h1 id="find-h">Learn the song you love, note by note.</h1>
+      <p class="lead">Search for a song. TRACE writes out your part as tab and sheet music, then plays the real recording so you can check every note by ear.</p>
 
-    <form id="search-form" class="search" role="search">
-      <label for="q" class="sr-only">Song or artist</label>
-      <input id="q" type="search" placeholder="Search a song or artist" autocomplete="off">
-      <button class="btn primary" type="submit">Find the bass part</button>
-    </form>
+      <form id="search-form" class="search" role="search">
+        <label for="q" class="sr-only">Song or artist</label>
+        <input id="q" type="search" placeholder="Song or artist" autocomplete="off">
+        <button class="btn primary" type="submit">Find the music</button>
+      </form>
+
+      <div class="instruments" role="group" aria-labelledby="inst-label">
+        <span id="inst-label" class="inst-label">Instrument</span>
+        <button type="button" class="chip" data-inst="bass" aria-pressed="true">Bass</button>
+        <button type="button" class="chip soon" data-inst="guitar" aria-pressed="false">Guitar <span>coming later</span></button>
+        <button type="button" class="chip soon" data-inst="piano" aria-pressed="false">Piano <span>coming later</span></button>
+        <button type="button" class="chip soon" data-inst="drums" aria-pressed="false">Drums <span>coming later</span></button>
+      </div>
+      <p id="inst-msg" class="muted small" role="status"></p>
+    </div>
 
     <div id="not-found" class="card notice" hidden>
       <h2 id="nf-title" class="h3"></h2>
       <p>We only have a few songs so far. Tell us you want this one and we'll count it.</p>
       <div class="row">
-        <button type="button" class="btn" id="request-btn">Request this song</button>
-        <button type="button" class="btn quiet" id="download-requests" hidden>Download my requests</button>
+        <button type="button" class="btn primary" id="request-btn">Request this song</button>
       </div>
       <p id="request-msg" class="muted" role="status"></p>
     </div>
 
-    <h2 class="h3">Ready to play</h2>
-    <ul id="song-list" class="song-list" aria-live="polite"></ul>
+    <section aria-labelledby="ready-h">
+      <div class="section-head">
+        <h2 id="ready-h" class="h3">Ready to play</h2>
+        <p class="muted small" id="ready-count"></p>
+      </div>
+      <ul id="song-list" class="song-list"></ul>
+    </section>
+
+    <section class="card ask" aria-labelledby="ask-h">
+      <div>
+        <h2 id="ask-h" class="h3">Can't find your song?</h2>
+        <p class="muted">Search for it above and press <strong>Request this song</strong>. The songs people ask for most get done first.</p>
+      </div>
+      <div class="ask-side">
+        <p class="small" id="my-requests">You haven't requested any songs yet.</p>
+        <button type="button" class="btn quiet" id="download-requests" hidden>Download my requests</button>
+      </div>
+    </section>
   </section>
 
-  <!-- ============ Screen 2: Wait ============ -->
+  <!-- ============ Wait: what TRACE is doing, step by step ============ -->
   <section id="screen-wait" class="screen no-print" aria-labelledby="wait-h" hidden>
     <h1 id="wait-h">Getting <span id="wait-song"></span> ready</h1>
-    <p class="lead">This song was prepared ahead of time, so you won't have to wait today. These are the four steps it went through, with the time each one really took when we built it.</p>
-    <ol class="wait-list" id="wait-list" aria-live="polite"></ol>
+    <p class="lead">Here's what TRACE does to turn a recording into music you can read. This song was prepared ahead of time, so today it only takes a moment.</p>
+    <ol class="how" id="wait-list" aria-live="polite"></ol>
     <div class="row">
-      <button type="button" class="btn" id="skip-wait">Show me the tab now</button>
+      <button type="button" class="btn" id="skip-wait">Show me the music now</button>
     </div>
   </section>
 
-  <!-- ============ Screen 3: Result (See it, Hear it, Take it away) ============ -->
+  <!-- ============ Result ============ -->
   <section id="screen-result" class="screen" aria-labelledby="song-h" hidden>
     <div class="result-head no-print">
       <div>
         <h1 id="song-h"></h1>
-        <p class="muted" id="song-meta"></p>
+        <p class="meta" id="song-meta"></p>
       </div>
       <button type="button" class="btn quiet" id="again">Pick another song</button>
     </div>
 
     <div class="card notice no-print" role="note">
-      <p><strong>Please read: this is a first draft made by a computer.</strong>
-      Most notes should be in the right place, but some rhythms and note lengths will be off. Listen to the real bass and trust your ears over the page.</p>
+      <p><strong>A first draft made by a computer.</strong>
+      Most notes should be right, but some rhythms and note lengths will be off. Press <strong>Play</strong>, listen to the real <span class="inst">bass</span>, and trust your ears over the page.</p>
     </div>
 
-    <!-- See it -->
     <section class="card" aria-labelledby="see-h">
       <div class="card-head no-print">
-        <h2 id="see-h" class="h3">See it</h2>
+        <h2 id="see-h" class="h3">The music</h2>
         <div class="segmented" role="group" aria-label="What to show">
           <button type="button" class="btn" data-view="tab" aria-pressed="true">Tab</button>
           <button type="button" class="btn" data-view="score" aria-pressed="false">Sheet music</button>
@@ -92,62 +112,71 @@
         <select id="key-select"></select>
         <span id="key-note" class="muted small"></span>
       </div>
-      <p class="muted small no-print">Tip: click or tap any bar to start playing from there.</p>
+      <p class="muted small no-print">Tap any bar to play from there. While <strong>Repeat</strong> is on, tapping a bar moves the repeat there.</p>
       <div id="score-wrap" class="paper">
-        <div id="score" aria-label="Bass tab and sheet music for the whole song"></div>
+        <div id="score" aria-label="Tab and sheet music for the whole song"></div>
         <div id="score-loading" class="muted">Drawing the music&hellip;</div>
       </div>
     </section>
 
-    <!-- Hear it -->
     <section class="card no-print" aria-labelledby="hear-h">
-      <h2 id="hear-h" class="h3">Hear it</h2>
-      <p class="muted">Press <strong>Play</strong> to hear the real bass from the recording while the marker follows along in the tab. If the marker and the sound disagree, the tab is probably wrong there.</p>
-      <details class="explain">
-        <summary>Why are there two sounds?</summary>
-        <p><strong>The real bass</strong> is the bass player from the recording, separated from the other instruments. Think of it as the answer key.</p>
-        <p><strong>The tab played back</strong> is what this tool wrote down, played by a computer bass. If it sounds different from the real bass, the tab is wrong in that spot.</p>
-        <p>Playing both at once lets you hear where they disagree. They may slowly drift apart, because they are two separate players.</p>
-      </details>
+      <h2 id="hear-h" class="h3">More ways to listen</h2>
       <div class="row">
         <button type="button" class="btn" id="play-synth" disabled>Hear the tab alone</button>
         <button type="button" class="btn" id="play-both" disabled>Play both</button>
-      </div>
-      <div class="row">
-        <label for="jump-bar">Go to bar</label>
+        <label for="jump-bar" class="gap-left">Go to bar</label>
         <input id="jump-bar" type="number" min="1" step="1" inputmode="numeric" class="num">
         <button type="button" class="btn" id="jump-go">Go</button>
       </div>
-      <div class="row">
-        <label class="check"><input type="checkbox" id="loop-on"> Repeat bars</label>
-        <label for="loop-from" class="sr-only">Repeat from bar</label>
-        <input id="loop-from" type="number" min="1" step="1" class="num" value="1">
-        <span>to</span>
-        <label for="loop-to" class="sr-only">Repeat to bar</label>
-        <input id="loop-to" type="number" min="1" step="1" class="num" value="4">
-      </div>
+      <details class="explain">
+        <summary>Why are there two sounds?</summary>
+        <p><strong>The real <span class="inst">bass</span></strong> is the player from the recording, separated from the other instruments. Think of it as the answer key.</p>
+        <p><strong>The tab played back</strong> is what TRACE wrote down, played by a computer. If it sounds different from the real recording, the tab is wrong in that spot.</p>
+        <p>Playing both at once lets you hear where they disagree. They may slowly drift apart, because they are two separate players.</p>
+      </details>
+      <details class="explain">
+        <summary>Marker ahead of or behind the sound?</summary>
+        <p>Wireless headphones and some speakers play the sound a little late. Nudge the marker until it lands on the notes as you hear them. TRACE remembers this on this device.</p>
+        <div class="row">
+          <button type="button" class="btn" id="sync-earlier">Marker earlier</button>
+          <output id="sync-out" class="sync-out">0 ms</output>
+          <button type="button" class="btn" id="sync-later">Marker later</button>
+          <button type="button" class="btn quiet" id="sync-reset">Reset</button>
+        </div>
+      </details>
     </section>
 
-    <!-- Take it away -->
     <section class="card no-print" aria-labelledby="take-h">
-      <h2 id="take-h" class="h3">Take it away</h2>
+      <h2 id="take-h" class="h3">Take it with you</h2>
       <div class="row">
         <button type="button" class="btn" id="print">Print or save as PDF</button>
+        <span class="muted small">Only the music is printed.</span>
       </div>
-      <p class="muted small">Only the music is printed. In the print window, choose "Save as PDF" to keep a file.</p>
     </section>
 
-    <!-- Player bar: always reachable while you scroll the score -->
+    <!-- Player: pinned to the bottom so it's always one tap away while you play -->
     <div class="player no-print" role="region" aria-label="Player">
-      <button type="button" class="btn primary play" id="play-main" disabled>Play</button>
-      <button type="button" class="btn" id="stop" disabled>Stop</button>
+      <div class="player-main">
+        <button type="button" class="btn primary play" id="play-main" disabled>Play</button>
+        <button type="button" class="btn" id="stop" disabled>Stop</button>
+        <p class="where" id="where" aria-hidden="true">Bar 1</p>
+      </div>
+      <div class="repeat" role="group" aria-label="Repeat">
+        <button type="button" class="btn" id="repeat" aria-pressed="false">Repeat</button>
+        <div class="seg" role="group" aria-label="How many bars to repeat">
+          <button type="button" class="btn" data-bars="1" aria-pressed="false">1 bar</button>
+          <button type="button" class="btn" data-bars="2" aria-pressed="false">2</button>
+          <button type="button" class="btn" data-bars="4" aria-pressed="true">4</button>
+          <button type="button" class="btn" data-bars="8" aria-pressed="false">8</button>
+        </div>
+        <span class="repeat-info" id="repeat-info" aria-live="polite"></span>
+      </div>
       <div class="speed">
         <label for="speed">Speed <output id="speed-out" for="speed">100%</output></label>
         <button type="button" class="btn icon" id="speed-down" aria-label="Slower by 1 percent">&minus;</button>
         <input id="speed" type="range" min="0.5" max="1.5" step="0.01" value="1">
         <button type="button" class="btn icon" id="speed-up" aria-label="Faster by 1 percent">+</button>
       </div>
-      <p class="where" id="where" aria-hidden="true">Bar 1</p>
       <p id="status" class="sr-only" role="status"></p>
     </div>
     <audio id="stem" preload="auto"></audio>
@@ -157,7 +186,7 @@
 <footer class="site-footer">
   <div class="wrap">
     <p><strong>Automatic first draft. Not a verified transcription.</strong></p>
-    <p class="muted small no-print">An open-source prototype. Music drawn with alphaTab. No audio is uploaded anywhere.</p>
+    <p class="muted small no-print">TRACE is an open-source prototype. Music drawn with alphaTab. No audio is uploaded anywhere.</p>
   </div>
 </footer>
 

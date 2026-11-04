@@ -2,7 +2,7 @@
  *
  * Plain JavaScript, no build step. Sections:
  *   1. Songs list (manifest)          4. Result: score drawing (alphaTab)
- *   2. Screen switching + progress     5. Playback: one clock, one tracker
+ *   2. Screen switching                5. Playback: one clock, one tracker, Repeat
  *   3. Find and Wait screens           6. Key override, print, start-up
  *
  * The one idea to understand: playback position is kept in BEATS from beat 1 of bar 1.
@@ -57,14 +57,18 @@
       ul.innerHTML = '<li class="muted">No songs found. Run pipeline/build_song.py to add one.</li>';
       return;
     }
+    $('ready-count').textContent = songs.length + (songs.length === 1 ? ' song' : ' songs');
     songs.forEach(function (s) {
       var li = document.createElement('li');
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'song-card';
-      b.innerHTML = '<strong></strong><span></span>';
+      b.innerHTML = '<strong></strong><span class="artist"></span><span class="facts"></span><span class="go" aria-hidden="true">Open</span>';
       b.querySelector('strong').textContent = s.title;
-      b.querySelector('span').textContent = (s.artist ? s.artist + ' · ' : '') + s.bars + ' bars';
+      b.querySelector('.artist').textContent = s.artist || '';
+      var mins = Math.round(s.bars * BEATS_PER_BAR / s.bpm * 10) / 10;
+      b.querySelector('.facts').textContent = cap(s.instrument || 'bass') + ' \u00b7 ' + keyLabel(s.key) + ' \u00b7 ' +
+        Math.round(s.bpm) + ' BPM \u00b7 about ' + mins + ' min';
       if (s.local) {
         var tag = document.createElement('span');
         tag.className = 'tag';
@@ -78,23 +82,12 @@
   }
 
   // ------------------------------------------------------------------
-  // 2. Screens and the 5-step progress strip
+  // 2. Screens
   // ------------------------------------------------------------------
-  var STEP_ORDER = ['find', 'wait', 'see', 'hear', 'take'];
-
-  function setProgress(current) {
-    var idx = STEP_ORDER.indexOf(current);
-    document.querySelectorAll('#steps li').forEach(function (li) {
-      var i = STEP_ORDER.indexOf(li.getAttribute('data-step'));
-      li.classList.toggle('done', i < idx);
-      li.classList.toggle('current', i === idx);
-      if (i === idx) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
-    });
-  }
+  function cap(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
 
   function show(name) {
     ['find', 'wait', 'result'].forEach(function (k) { $('screen-' + k).hidden = (k !== name); });
-    setProgress(name === 'result' ? 'see' : name);
     window.scrollTo(0, 0);
     var h = document.querySelector('#screen-' + name + ' h1');
     if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
@@ -123,13 +116,33 @@
   function getRequests() {
     try { return JSON.parse(localStorage.getItem('songRequests') || '[]'); } catch (e) { return []; }
   }
-  $('request-btn').addEventListener('click', function () {
+  function addRequest(entry) {
     var list = getRequests();
-    list.push({ query: lastQuery, at: new Date().toISOString() });
+    entry.at = new Date().toISOString();
+    list.push(entry);
     try { localStorage.setItem('songRequests', JSON.stringify(list)); } catch (e) { /* storage blocked */ }
-    $('request-msg').textContent = 'Thanks, we’ve noted it. You have asked for ' + list.length +
-      ' song' + (list.length === 1 ? '' : 's') + ' so far.';
-    $('download-requests').hidden = false;
+    showRequestCount();
+    return list.length;
+  }
+  function showRequestCount() {
+    var n = getRequests().length;
+    $('my-requests').textContent = n ? 'You have made ' + n + ' request' + (n === 1 ? '' : 's') + ' on this device.'
+                                     : 'You haven\u2019t requested any songs yet.';
+    $('download-requests').hidden = !n;
+  }
+  $('request-btn').addEventListener('click', function () {
+    addRequest({ query: lastQuery });
+    $('request-msg').textContent = 'Thanks, we\u2019ve noted it.';
+  });
+
+  // Only bass works today. The other instruments are a fake door: tapping one records the interest.
+  document.querySelectorAll('[data-inst]').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var inst = chip.getAttribute('data-inst');
+      if (inst === 'bass') { $('inst-msg').textContent = ''; return; }
+      addRequest({ instrument: inst });
+      $('inst-msg').textContent = cap(inst) + ' is coming later. We\u2019ve noted that you want it.';
+    });
   });
   $('download-requests').addEventListener('click', function () {
     var blob = new Blob([JSON.stringify(getRequests(), null, 2)], { type: 'application/json' });
@@ -149,7 +162,14 @@
     list.innerHTML = '';
     show('wait');
     history.replaceState(null, '', '?song=' + encodeURIComponent(song.id));
-    var names = ['Getting the song', 'Separating the bass', 'Finding the notes', 'Writing the tab'];
+    var inst = song.instrument || 'bass';
+    var names = ['Getting the song', 'Separating the ' + inst, 'Finding the notes', 'Writing the music'];
+    var explain = [
+      'TRACE starts from the full recording: every instrument and voice mixed together.',
+      'A separation model (Demucs) pulls the ' + inst + ' out of the mix, like turning every other instrument down to zero. That gives you the real ' + inst + ' to play along with later.',
+      'A note detector (Basic Pitch, by Spotify) listens to that ' + inst + ' track and writes down each note: its pitch, when it starts and how long it lasts.',
+      'TRACE tidies the detector\u2019s mistakes, lines the rhythm up with the beat, works out the key, and picks a string and fret for every note so it\u2019s comfortable to play.'
+    ];
     var build = loadJson(song.build).catch(function () { return null; });
     build.then(function (b) {
       var items = names.map(function (name, i) {
@@ -159,8 +179,9 @@
         var note = 'done earlier (not timed)';
         if (step && step.seconds != null) note = 'took ' + formatSeconds(step.seconds);
         var li = document.createElement('li');
-        li.innerHTML = '<span class="dot" aria-hidden="true"></span><span class="name"></span><span class="time"></span>';
+        li.innerHTML = '<span class="dot" aria-hidden="true"></span><div><p class="name"></p><p class="what"></p></div><span class="time"></span>';
         li.querySelector('.name').textContent = name;
+        li.querySelector('.what').textContent = explain[i];
         li.querySelector('.time').textContent = '';
         li.dataset.note = note;
         list.appendChild(li);
@@ -178,7 +199,7 @@
         else { clearInterval(waitTimer); setTimeout(function () { showResult(song); }, reducedMotion ? 0 : 500); }
       }
       step();
-      waitTimer = setInterval(step, reducedMotion ? 150 : 700);
+      waitTimer = setInterval(step, reducedMotion ? 400 : 1600);  // slow enough to read each step
     });
     $('skip-wait').onclick = function () { clearInterval(waitTimer); showResult(song); };
   }
@@ -226,6 +247,7 @@
       drawing = false;
       $('score-loading').hidden = true;
       if (viewPending) { viewPending = false; redrawView(); return; }
+      drawLoopMarks();
       drawTracker(true);
     });
     api.error.on(function (e) { say('Something went wrong drawing the music: ' + (e && e.message ? e.message : e)); });
@@ -236,6 +258,7 @@
     api.playerPositionChanged.on(function (e) {
       lastSynthTick = e.currentTick;
       lastSynthAt = performance.now();
+      if (mode === 'tab') checkBounds();
     });
     api.playerFinished.on(function () {
       if (mode === 'tab') { stopPlayback(); say('End of the song.'); }
@@ -249,11 +272,13 @@
     current = song;
     show('result');
     $('song-h').textContent = song.title + (song.artist ? ' – ' + song.artist : '');
-    $('song-meta').textContent = 'Bass · ' + Math.round(song.bpm) + ' beats per minute · ' + song.bars + ' bars';
+    var inst = song.instrument || 'bass';
+    $('song-meta').textContent = cap(inst) + ' \u00b7 ' + Math.round(song.bpm) + ' BPM \u00b7 ' + song.bars + ' bars';
+    document.querySelectorAll('.inst').forEach(function (el) { el.textContent = inst; });
     $('jump-bar').max = song.bars;
-    $('loop-from').max = song.bars;
-    $('loop-to').max = song.bars;
+    repeat.on = false;
     setPosition(0);
+    updateRepeat();
     if (!api) initAlphaTab();
     $('score-loading').hidden = false;
     clearScore();
@@ -328,6 +353,7 @@
 
   stem.addEventListener('error', function () { if (current && current.stem) say('The real bass audio could not be loaded.'); });
   stem.addEventListener('ended', function () { if (mode === 'stem' || mode === 'both') stopPlayback(); });
+  stem.addEventListener('timeupdate', function () { if (mode === 'stem' || mode === 'both') checkBounds(); });
 
   /** Seek the stem. Before the file has loaded (normal on iPad until the first tap), wait for it. */
   function setStemTime(t) {
@@ -395,7 +421,6 @@
       lastSynthAt = performance.now();
       api.play();
     }
-    setProgress('hear');
     say(newMode === 'stem' ? 'Playing the real bass.' : newMode === 'tab' ? 'Playing the tab.' : 'Playing both.');
     updateButtons();
     loop();
@@ -431,23 +456,35 @@
     if (api) { try { api.pause(); } catch (e) { /* not ready yet */ } }
   }
 
-  /** Runs every frame while playing: end of song, looping, tracker. */
+  /**
+   * Repeat and end-of-song. Returns the position to draw, or null if playback just stopped.
+   * Called every frame AND from the audio's own progress events, because browsers pause
+   * screen frames in background tabs; this way Repeat and stopping still work there.
+   */
+  function checkBounds() {
+    if (!mode) return null;
+    var beats = nowBeats();
+    var lp = loopRange();
+    if (lp && beats >= lp.end) {
+      seekTo(lp.start);
+      return lp.start;
+    }
+    if (beats >= totalBeats()) {
+      // The last bar has finished: stop both players, reset the cursor and the buttons.
+      stopPlayback();
+      say('End of the song.');
+      return null;
+    }
+    return beats;
+  }
+
+  /** Runs every frame while playing: draws the tracker. */
   function loop() {
     cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(function tick() {
-      if (!mode) return;
-      var beats = nowBeats();
-      var lp = loopRange();
-      if (lp && beats >= lp.end) {
-        seekTo(lp.start);
-        beats = lp.start;
-      } else if (beats >= totalBeats()) {
-        // The last bar has finished: stop both players, reset the cursor and the buttons.
-        stopPlayback();
-        say('End of the song.');
-        return;
-      }
-      drawTracker(true, beats);
+      var beats = checkBounds();
+      if (beats === null) return;
+      drawTracker(true, Math.max(0, beats - syncMs / 1000 * speed() / secondsPerBeat()));
       rafId = requestAnimationFrame(tick);
     });
   }
@@ -469,13 +506,46 @@
     lastBarShown = -1;
   }
 
+  // Repeat: on/off, how many bars, and the first bar (1-based). Players loop a short section over
+  // and over, so it's one big button plus bar-count presets in the player, not form fields.
+  var repeat = { on: false, bars: 4, start: 1 };
+
   function loopRange() {
-    if (!$('loop-on').checked) return null;
-    var a = clampBar(parseInt($('loop-from').value, 10));
-    var b = clampBar(parseInt($('loop-to').value, 10));
-    if (b < a) { var t = a; a = b; b = t; }
+    if (!repeat.on) return null;
+    var a = clampBar(repeat.start), b = clampBar(repeat.start + repeat.bars - 1);
     return { start: (a - 1) * BEATS_PER_BAR, end: b * BEATS_PER_BAR };
   }
+
+  function updateRepeat() {
+    $('repeat').setAttribute('aria-pressed', String(repeat.on));
+    $('repeat').textContent = repeat.on ? 'Repeat on' : 'Repeat';
+    $('repeat').parentNode.classList.toggle('on', repeat.on);
+    document.querySelectorAll('[data-bars]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(+b.getAttribute('data-bars') === repeat.bars));
+    });
+    var lp = loopRange();
+    var first = lp ? lp.start / BEATS_PER_BAR + 1 : 0, last = lp ? lp.end / BEATS_PER_BAR : 0;
+    $('repeat-info').textContent = !lp ? '' : first === last ? 'Bar ' + first : 'Bars ' + first + '\u2013' + last;
+    drawLoopMarks();
+    if (current) drawTracker(mode !== null);
+  }
+
+  function currentBar() { return Math.floor((mode ? nowBeats() : positionBeats) / BEATS_PER_BAR) + 1; }
+
+  $('repeat').addEventListener('click', function () {
+    repeat.on = !repeat.on;
+    if (repeat.on) repeat.start = clampBar(currentBar());
+    updateRepeat();
+    say(repeat.on ? 'Repeating ' + $('repeat-info').textContent + '.' : 'Repeat off.');
+  });
+  document.querySelectorAll('[data-bars]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      repeat.bars = +b.getAttribute('data-bars');
+      if (!repeat.on) { repeat.on = true; repeat.start = clampBar(currentBar()); }
+      updateRepeat();
+      say('Repeating ' + $('repeat-info').textContent + '.');
+    });
+  });
 
   function clampBar(n) { return Math.max(1, Math.min(barCount || 1, isNaN(n) ? 1 : n)); }
 
@@ -526,7 +596,6 @@
   function drawTracker(visible, beats) {
     var host = $('score');
     if (trackerBar.parentNode !== host) { host.appendChild(trackerBar); host.appendChild(trackerBeat); }
-    drawLoopMarks();
     if (beats === undefined) beats = positionBeats;
     var show = visible !== false && current && (mode !== null || positionBeats > 0);
     var barIndex = Math.max(0, Math.floor(beats / BEATS_PER_BAR));
@@ -543,7 +612,11 @@
     place(trackerBeat, off.x + beatX(mb, tick), off.y + r.y, 3, r.h);
     if (barIndex !== lastBarShown) {
       lastBarShown = barIndex;
-      keepInView(off.y + r.y, r.h, barIndex, r.x + off.x);
+      // Look one bar ahead: if it starts a new line, make sure that line is visible too.
+      var next = barBounds(barIndex + 1);
+      var bottom = r.y + r.h;
+      if (next && next.realBounds.y > r.y) bottom = next.realBounds.y + next.realBounds.h;
+      keepInView(off.y + r.y, bottom - r.y, barIndex, r.x + off.x);
     }
   }
 
@@ -597,6 +670,7 @@
     var beat = lookup.getBeatAtPos(e.clientX - rect.left, e.clientY - rect.top);
     if (!beat) return;
     var barIndex = beat.voice.bar.index;
+    if (repeat.on) { repeat.start = barIndex + 1; updateRepeat(); }
     jumpToBar(barIndex + 1);
   }
 
@@ -613,16 +687,6 @@
   $('jump-bar').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') { e.preventDefault(); jumpToBar(parseInt($('jump-bar').value, 10)); }
   });
-  $('loop-on').addEventListener('change', function () {
-    if ($('loop-on').checked) {
-      var bar = Math.floor(positionBeats / BEATS_PER_BAR) + 1;
-      $('loop-from').value = clampBar(bar);
-      $('loop-to').value = clampBar(bar + 3);
-      say('Repeating bars ' + $('loop-from').value + ' to ' + $('loop-to').value + '.');
-    }
-    drawTracker(true);
-  });
-  ['loop-from', 'loop-to'].forEach(function (id) { $(id).addEventListener('change', function () { drawTracker(true); }); });
 
   // ---- Buttons ----
   $('play-main').addEventListener('click', function () { play(hasStem() ? 'stem' : 'tab'); });
@@ -657,9 +721,24 @@
     if (!$('play-main').disabled) $('play-main').click();
   });
 
-  window.addEventListener('resize', function () { if (current && !$('screen-result').hidden) drawTracker(mode !== null); });
+  window.addEventListener('resize', function () {
+    if (current && !$('screen-result').hidden) { drawLoopMarks(); drawTracker(mode !== null); }
+  });
 
   function say(text) { $('status').textContent = text; }
+
+  // Marker timing. Positive = marker later (for headphones/speakers that play the sound late).
+  var syncMs = 0;
+  try { syncMs = parseInt(localStorage.getItem('traceSyncMs') || '0', 10) || 0; } catch (e) { /* storage blocked */ }
+  function setSync(ms) {
+    syncMs = Math.max(-500, Math.min(500, ms));
+    $('sync-out').textContent = (syncMs > 0 ? '+' : '') + syncMs + ' ms';
+    try { localStorage.setItem('traceSyncMs', String(syncMs)); } catch (e) { /* storage blocked */ }
+  }
+  $('sync-earlier').addEventListener('click', function () { setSync(syncMs - 20); });
+  $('sync-later').addEventListener('click', function () { setSync(syncMs + 20); });
+  $('sync-reset').addEventListener('click', function () { setSync(0); });
+  setSync(syncMs);
 
   // ------------------------------------------------------------------
   // 6. Key override, print, start-up
@@ -684,6 +763,11 @@
       }
     });
     return out;
+  }
+
+  function keyLabel(value) {
+    var k = allKeys().filter(function (x) { return x.value === value; })[0];
+    return k ? k.label : value;
   }
 
   var detectedKey = null;
@@ -733,7 +817,6 @@
 
   $('print').addEventListener('click', function () {
     stopPlayback();
-    setProgress('take');
     window.print();
   });
 
@@ -753,7 +836,7 @@
   };
 
   // Start-up. ?song=<id> opens a song directly (a link you can share); &skip=1 skips the Wait screen.
-  if (getRequests().length) $('download-requests').hidden = false;
+  showRequestCount();
   loadSongs().then(function () {
     renderSongList();
     var params = new URLSearchParams(location.search);

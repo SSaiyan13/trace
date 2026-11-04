@@ -71,22 +71,15 @@ main { padding-top: 24px; padding-bottom: 32px; outline: none; flex: 1 0 auto; w
    controls, so they don't need a ring. */
 h1[tabindex="-1"]:focus, main:focus { outline: none; }
 
-/* ---------- Header and the 5-step progress strip ---------- */
+/* ---------- Header: logo (fused treble + bass clef) and wordmark ---------- */
 .site-header { background: var(--black); color: #F4EEEF; border-bottom: 3px solid var(--accent); }
-.site-header .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; justify-content: space-between; padding-top: 10px; padding-bottom: 10px; }
-.brand { margin: 0; font-family: var(--serif); font-weight: 700; font-size: 22px; letter-spacing: 0.12em; line-height: 1.1; }
-.brand span { color: #E58A97; }
+.site-header .wrap { display: flex; align-items: center; padding-top: 10px; padding-bottom: 10px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; min-height: 44px; }
+.brand .logo { height: 46px; width: auto; flex: none; }
+.brand .logo .clef-treble { fill: #C24456; }
+.brand .logo .clef-bass { fill: #F4EEEF; }
+.brand-text { font-family: var(--serif); font-weight: 700; font-size: 24px; letter-spacing: 0.14em; line-height: 1.1; }
 .brand .tagline { display: block; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-weight: 400; font-size: 12px; letter-spacing: 0.04em; color: #CFC4C6; }
-.steps { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; counter-reset: step; }
-.steps li {
-  counter-increment: step;
-  font-size: 14px; padding: 6px 12px; border-radius: 999px;
-  border: 1px solid #3A2E30; color: #CFC4C6; white-space: nowrap;
-}
-.steps li::before { content: counter(step) " "; font-weight: 700; }
-.steps li.done { color: #FFFFFF; border-color: #E58A97; }
-.steps li.done::before { content: "\2713  "; }
-.steps li.current { background: #8E2433; color: #FFFFFF; border-color: #8E2433; font-weight: 600; }
 
 /* ---------- Building blocks ---------- */
 .card { background: var(--card); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: var(--radius); padding: 16px; margin-top: 16px; min-width: 0; }
@@ -118,25 +111,57 @@ input.num { width: 5.5em; }
 input[type="range"] { accent-color: var(--accent); width: 140px; min-height: 44px; }
 
 /* ---------- Find ---------- */
-.search { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 8px; }
-.search input { flex: 1 1 260px; min-height: 48px; }
-.song-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.hero {
+  margin: 8px 0 24px; padding: 28px 24px; border-radius: var(--radius);
+  background: var(--black); color: #F4EEEF; border-bottom: 4px solid var(--accent);
+  /* faint staff lines: the page is about reading music */
+  background-image: repeating-linear-gradient(to bottom, transparent 0 21px, rgba(244, 238, 239, 0.06) 21px 22px);
+}
+.hero h1 { font-size: clamp(28px, 5vw, 44px); max-width: 18ch; }
+.hero .lead { color: #CFC4C6; max-width: 58ch; }
+.hero input[type="search"] { background: #171214; color: #F4EEEF; border-color: #3A2E30; }
+.hero .btn.primary { background: #8E2433; border-color: #8E2433; color: #FFFFFF; }
+.search { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 14px; max-width: 760px; }
+.search input { flex: 1 1 260px; min-height: 52px; font-size: 17px; }
+.instruments { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.inst-label { font-size: 14px; color: #CFC4C6; margin-right: 4px; }
+.chip {
+  font: inherit; font-weight: 600; min-height: 44px; padding: 0 16px; border-radius: 999px; cursor: pointer;
+  border: 1px solid #3A2E30; background: transparent; color: #F4EEEF;
+}
+.chip[aria-pressed="true"] { background: #8E2433; border-color: #8E2433; }
+.chip.soon { color: #CFC4C6; }
+.chip span { font-weight: 400; font-size: 12px; margin-left: 4px; color: #B9ADB0; }
+.hero #inst-msg { color: #CFC4C6; min-height: 1.5em; margin: 8px 0 0; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 8px; }
+.song-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 .song-card {
-  width: 100%; text-align: left; display: block; padding: 14px 16px; min-height: 64px;
+  position: relative; width: 100%; text-align: left; display: block; padding: 18px 18px 16px; min-height: 120px;
   font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-left: 6px solid var(--accent); border-radius: var(--radius); cursor: pointer;
 }
-.song-card:hover { border-color: var(--accent); }
-.song-card strong { display: block; font-family: var(--serif); font-size: 19px; }
-.song-card span { color: var(--muted); font-size: 14px; }
+.song-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12); }
+.song-card strong { display: block; font-family: var(--serif); font-size: 22px; padding-right: 56px; }
+.song-card .artist { display: block; color: var(--ink); font-size: 15px; margin-top: 2px; }
+.song-card .facts { display: block; color: var(--muted); font-size: 14px; margin-top: 10px; }
+.song-card .go { position: absolute; top: 16px; right: 16px; font-size: 13px; font-weight: 600; color: var(--accent-text); }
+.ask { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; margin-top: 24px; }
+.ask p { margin: 0; }
+.ask-side { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .tag { display: inline-block; margin-left: 6px; font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
 #not-found { margin-bottom: 16px; }
 
-/* ---------- Wait ---------- */
-.wait-list { list-style: none; margin: 16px 0; padding: 0; display: grid; gap: 12px; max-width: 560px; }
-.wait-list li { display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: center; color: var(--muted); }
-.wait-list li.active { color: var(--ink); font-weight: 600; }
-.wait-list li.done { color: var(--ink); }
-.wait-list .time { font-size: 14px; color: var(--muted); font-weight: 400; }
+/* ---------- Wait: how it works, one step at a time ---------- */
+.how { list-style: none; margin: 16px 0; padding: 0; display: grid; gap: 12px; max-width: 760px; }
+.how li {
+  display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: start; color: var(--muted);
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; opacity: 0.55;
+}
+.how li.active, .how li.done { opacity: 1; color: var(--ink); }
+.how li.active { border-color: var(--accent); }
+.how .dot { margin-top: 3px; }
+.how .name { margin: 0; font-weight: 700; }
+.how .what { margin: 4px 0 0; color: var(--muted); max-width: 62ch; }
+.how .time { font-size: 14px; color: var(--muted); white-space: nowrap; }
 .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line); }
 .active .dot { border-color: var(--accent); border-top-color: transparent; animation: spin 0.8s linear infinite; }
 .done .dot { background: var(--accent); border-color: var(--accent); }
@@ -144,6 +169,9 @@ input[type="range"] { accent-color: var(--accent); width: 140px; min-height: 44p
 
 /* ---------- Result ---------- */
 .result-head { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: flex-start; justify-content: space-between; }
+.meta { color: var(--muted); margin: 0; }
+.gap-left { margin-left: 8px; }
+.sync-out { min-width: 5em; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; }
 .segmented { display: flex; flex-wrap: wrap; gap: 6px; }
 .key-row label { font-weight: 600; }
 .explain { margin: 8px 0; }
@@ -158,7 +186,7 @@ input[type="range"] { accent-color: var(--accent); width: 140px; min-height: 44p
 /* Our own tracker, drawn on top of the score */
 .tracker-bar { position: absolute; background: var(--bar-highlight); border: 2px solid var(--bar-outline); border-radius: 4px; pointer-events: none; z-index: 2; }
 .tracker-beat { position: absolute; width: 3px; margin-left: -1px; background: var(--cursor); border-radius: 2px; pointer-events: none; z-index: 3; }
-.loop-bar { position: absolute; background: rgba(13, 10, 11, 0.06); pointer-events: none; z-index: 1; }
+.loop-bar { position: absolute; background: rgba(122, 31, 43, 0.06); border-top: 3px solid rgba(122, 31, 43, 0.55); pointer-events: none; z-index: 1; }
 
 /* Player bar sticks to the bottom of the window while the result is shown */
 .player {
@@ -168,10 +196,17 @@ input[type="range"] { accent-color: var(--accent); width: 140px; min-height: 44p
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.18);
   border-top: 3px solid var(--accent);
 }
-.player .play { min-width: 140px; }
+.player-main { display: flex; align-items: center; gap: 8px; }
+.player .play { min-width: 140px; min-height: 52px; font-size: 18px; }
+.repeat { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.repeat .seg { display: inline-flex; gap: 4px; }
+.repeat .seg .btn { padding: 0 12px; }
+/* bar counts only look "on" while Repeat is on; otherwise the chosen one is just outlined */
+.repeat:not(.on) .seg .btn[aria-pressed="true"] { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--accent); }
+.repeat-info { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 6em; }
 .speed { display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
 .speed label { font-size: 14px; color: var(--muted); white-space: nowrap; }
-.where { margin: 0 0 0 auto; font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.where { margin: 0 0 0 8px; font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
 
 .site-footer { background: var(--black); color: #F4EEEF; border-top: 3px solid var(--accent); padding: 16px 0 24px; margin-top: 24px; }
 .site-footer p { margin: 0 0 4px; }
@@ -191,8 +226,10 @@ input[type="range"] { accent-color: var(--accent); width: 140px; min-height: 44p
   .wrap { padding: 0 12px; }
   .card { padding: 12px; }
   .speed input[type="range"] { width: 100px; }
-  .where { margin-left: 0; }
   .player .play { flex: 1 1 auto; }
+  .player-main { width: 100%; }
+  .hero { padding: 20px 16px; }
+  .brand .logo { height: 40px; }
 }
 
 /* ---------- Reduced motion ---------- */

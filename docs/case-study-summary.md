@@ -35,8 +35,14 @@ A "say what you want, get a result page fast, act on it" pattern (borrowed from 
 - **Play both** for side-by-side checking
 - A bar-and-beat tracker that follows the audio and keeps the current bar on screen
 - Tap any bar to jump there, or go to a bar number
-- Repeat a range of bars for practice
+- **Repeat** 1, 2, 4 or 8 bars with one tap, right in the player; tap a bar to move the repeat there
+- A marker timing nudge for wireless headphones that play the sound late
 - Speed from 50% to 150% in 1% steps, without changing the pitch
+
+**Finding music**
+- Search, or pick from ready songs (cards show instrument, key, tempo and length)
+- **Request this song** for missing songs, and "coming later" instruments (guitar, piano, drums): both are fake doors that measure demand
+- While a song is prepared, the Wait screen explains how TRACE works, step by step
 - Playback stops cleanly at the end of the song
 
 **Taking it away**
@@ -49,6 +55,7 @@ A "say what you want, get a result page fast, act on it" pattern (borrowed from 
 - Key and tempo guesses show their confidence
 
 ## Design
+- **Logo:** a treble clef and a bass clef fused into one mark (shapes from the open-source Bravura music font), pointing at more instruments than bass.
 - **Visual identity:** maroon and black. A black header band with a maroon rule, maroon for actions and the playback marker, and serif headings that echo printed sheet music. The score itself is always black on white, like paper.
 - **Light and dark mode:** warm paper background in light mode, near-black in dark mode. Maroon text turns to a lighter rose on black to stay readable.
 - **Accessible:** keyboard-operable, visible focus, 44px+ touch targets (48px on tablets), AA contrast, respects reduced motion, screen-reader announcements for playback.
